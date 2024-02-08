@@ -16,12 +16,24 @@ import {
 
 const Chessboard = () => {
 	const [activePiece, setActivePiece] = useState<HTMLElement | null>(null);
+	const [promotionPawn, setPromotionPawn] = useState<Piece>();
 	const [grabPosition, setGrabPosition] = useState<Position>({ x: -1, y: -1 });
 	const [pieces, setPieces] = useState<Piece[]>(initialBoardState);
 	const chessboardRef = useRef<HTMLDivElement>(null);
+	const modalRef = useRef<HTMLDivElement>(null);
 	const referee = new Referee();
 
+	const updateValidMoves = () => {
+		setPieces((currentPieces) => {
+			return currentPieces.map((p) => {
+				p.possibleMoves = referee.getValidMoves(p, currentPieces);
+				return p;
+			});
+		});
+	};
+
 	const grabPiece = (e: React.MouseEvent) => {
+		updateValidMoves();
 		const element = e.target as HTMLElement;
 		const chessboard = chessboardRef.current;
 
@@ -131,6 +143,13 @@ const Chessboard = () => {
 								piece.type === PieceType.PAWN;
 							piece.position.x = x;
 							piece.position.y = y;
+
+							let promotionRow = piece.team === TeamType.OUR ? 7 : 0;
+
+							if (y === promotionRow && piece.type === PieceType.PAWN) {
+								modalRef.current?.classList.remove('hidden');
+								setPromotionPawn(piece);
+							}
 							results.push(piece);
 						} else if (!samePosition(piece.position, { x, y })) {
 							if (piece.type === PieceType.PAWN) {
@@ -154,6 +173,49 @@ const Chessboard = () => {
 		}
 	};
 
+	const promotePawn = (pieceType: PieceType) => {
+		if (promotionPawn === undefined) {
+			return;
+		}
+
+		const updatedPieces = pieces.reduce((results, piece) => {
+			if (samePosition(piece.position, promotionPawn.position)) {
+				const teamType = piece.team === TeamType.OUR ? 'w' : 'b';
+				let imageType = '';
+
+				switch (pieceType) {
+					case PieceType.ROOK:
+						imageType = 'rook';
+						break;
+					case PieceType.BISHOP:
+						imageType = 'bishop';
+						break;
+					case PieceType.KNIGHT:
+						imageType = 'knight';
+						break;
+					case PieceType.QUEEN:
+						imageType = 'queen';
+						break;
+				}
+
+				piece.type = pieceType;
+				piece.image = `assets/${imageType}_${teamType}.png`;
+				console.log(piece.image);
+			}
+
+			results.push(piece);
+			return results;
+		}, [] as Piece[]);
+
+		setPieces(updatedPieces);
+
+		modalRef.current?.classList.add('hidden');
+	};
+
+	const promotionTeamType = () => {
+		return promotionPawn?.team === TeamType.OUR ? 'w' : 'b';
+	};
+
 	let board = [];
 
 	for (let j = VERTICAL_AXIS.length - 1; j >= 0; j--) {
@@ -164,26 +226,75 @@ const Chessboard = () => {
 			);
 			let image = piece ? piece.image : '';
 
-			board.push(<Tile key={`${j},${i}`} number={number} image={image} />);
+			let currentPiece =
+				activePiece != null
+					? pieces.find((p) => {
+							return samePosition(p.position, grabPosition);
+					  })
+					: undefined;
+			let highlight = currentPiece?.possibleMoves
+				? currentPiece.possibleMoves.some((p) => {
+						return samePosition(p, { x: i, y: j });
+				  })
+				: false;
+
+			board.push(
+				<Tile
+					key={`${j},${i}`}
+					number={number}
+					image={image}
+					highlight={highlight}
+				/>
+			);
 		}
 	}
 
 	return (
-		<div
-			onMouseMove={(e) => {
-				movePiece(e);
-			}}
-			onMouseDown={(e) => {
-				grabPiece(e);
-			}}
-			onMouseUp={(e) => {
-				dropPiece(e);
-			}}
-			id="chessboard"
-			ref={chessboardRef}>
-			{board}
-		</div>
+		<>
+			<div id="pawn-promotion-modal" className="hidden" ref={modalRef}>
+				<div className="modal-body">
+					<img
+						onClick={() => promotePawn(PieceType.ROOK)}
+						src={`/assets/rook_${promotionTeamType()}.png`}
+						alt="Oops, some error!"
+					/>
+					<img
+						onClick={() => promotePawn(PieceType.BISHOP)}
+						src={`/assets/bishop_${promotionTeamType()}.png`}
+						alt="Oops, some error!"
+					/>
+					<img
+						onClick={() => promotePawn(PieceType.KNIGHT)}
+						src={`/assets/knight_${promotionTeamType()}.png`}
+						alt="Oops, some error!"
+					/>
+					<img
+						onClick={() => promotePawn(PieceType.QUEEN)}
+						src={`/assets/queen_${promotionTeamType()}.png`}
+						alt="Oops, some error!"
+					/>
+				</div>
+			</div>
+			<div
+				onMouseMove={(e) => {
+					movePiece(e);
+				}}
+				onMouseDown={(e) => {
+					grabPiece(e);
+				}}
+				onMouseUp={(e) => {
+					dropPiece(e);
+				}}
+				id="chessboard"
+				ref={chessboardRef}>
+				{board}
+			</div>
+		</>
 	);
 };
 
 export default Chessboard;
+
+// Collision with the board
+// Promotion error
+// Turns

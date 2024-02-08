@@ -2,6 +2,7 @@ import { Piece, Position, TeamType, samePosition } from '../../Constants';
 import {
 	tileIsEmptyOrOccupiedByOpponent,
 	tileIsOccupied,
+	tileIsOccupiedByOpponent,
 } from './GeneralRules';
 
 export const bishopMove = (
@@ -89,4 +90,76 @@ export const bishopMove = (
 		}
 	}
 	return false;
+};
+
+export const getPossibleBishopMoves = (
+	bishop: Piece,
+	boardState: Piece[]
+): Position[] => {
+	const possibleMoves: Position[] = [];
+
+	for (let i = 1; i < 8; i++) {
+		const destination: Position = {
+			x: bishop.position.x + i,
+			y: bishop.position.y + i,
+		};
+
+		if (!tileIsOccupied(destination, boardState)) {
+			possibleMoves.push(destination);
+		} else if (tileIsOccupiedByOpponent(destination, boardState, bishop.team)) {
+			possibleMoves.push(destination);
+			break;
+		} else {
+			break;
+		}
+	}
+
+	for (let i = 1; i < 8; i++) {
+		const destination: Position = {
+			x: bishop.position.x - i,
+			y: bishop.position.y + i,
+		};
+
+		if (!tileIsOccupied(destination, boardState)) {
+			possibleMoves.push(destination);
+		} else if (tileIsOccupiedByOpponent(destination, boardState, bishop.team)) {
+			possibleMoves.push(destination);
+			break;
+		} else {
+			break;
+		}
+	}
+	for (let i = 1; i < 8; i++) {
+		const destination: Position = {
+			x: bishop.position.x + i,
+			y: bishop.position.y - i,
+		};
+
+		if (!tileIsOccupied(destination, boardState)) {
+			possibleMoves.push(destination);
+		} else if (tileIsOccupiedByOpponent(destination, boardState, bishop.team)) {
+			possibleMoves.push(destination);
+			break;
+		} else {
+			break;
+		}
+	}
+
+	for (let i = 1; i < 8; i++) {
+		const destination: Position = {
+			x: bishop.position.x - i,
+			y: bishop.position.y - i,
+		};
+
+		if (!tileIsOccupied(destination, boardState)) {
+			possibleMoves.push(destination);
+		} else if (tileIsOccupiedByOpponent(destination, boardState, bishop.team)) {
+			possibleMoves.push(destination);
+			break;
+		} else {
+			break;
+		}
+	}
+
+	return possibleMoves;
 };
