@@ -1,4 +1,5 @@
-import { Piece, Position, TeamType, samePosition } from '../../Constants';
+import { TeamType } from '../../Types';
+import { Piece, Position } from '../../models';
 import {
 	tileIsEmptyOrOccupiedByOpponent,
 	tileIsOccupied,
@@ -16,12 +17,12 @@ export const bishopMove = (
 			desiredPosition.x > initialPosition.x &&
 			desiredPosition.y > initialPosition.y
 		) {
-			let passedPosition: Position = {
-				x: initialPosition.x + i,
-				y: initialPosition.y + i,
-			};
+			let passedPosition = new Position(
+				initialPosition.x + i,
+				initialPosition.y + i
+			);
 
-			if (samePosition(passedPosition, desiredPosition)) {
+			if (passedPosition.samePosition(desiredPosition)) {
 				if (tileIsEmptyOrOccupiedByOpponent(passedPosition, boardState, team)) {
 					return true;
 				}
@@ -36,11 +37,11 @@ export const bishopMove = (
 			desiredPosition.x > initialPosition.x &&
 			desiredPosition.y < initialPosition.y
 		) {
-			let passedPosition: Position = {
-				x: initialPosition.x + i,
-				y: initialPosition.y - i,
-			};
-			if (samePosition(passedPosition, desiredPosition)) {
+			let passedPosition = new Position(
+				initialPosition.x + i,
+				initialPosition.y - i
+			);
+			if (passedPosition.samePosition(desiredPosition)) {
 				if (tileIsEmptyOrOccupiedByOpponent(passedPosition, boardState, team)) {
 					return true;
 				}
@@ -55,11 +56,11 @@ export const bishopMove = (
 			desiredPosition.x < initialPosition.x &&
 			desiredPosition.y < initialPosition.y
 		) {
-			let passedPosition: Position = {
-				x: initialPosition.x - i,
-				y: initialPosition.y - i,
-			};
-			if (samePosition(passedPosition, desiredPosition)) {
+			let passedPosition = new Position(
+				initialPosition.x - i,
+				initialPosition.y - i
+			);
+			if (passedPosition.samePosition(desiredPosition)) {
 				if (tileIsEmptyOrOccupiedByOpponent(passedPosition, boardState, team)) {
 					return true;
 				}
@@ -74,11 +75,11 @@ export const bishopMove = (
 			desiredPosition.x < initialPosition.x &&
 			desiredPosition.y > initialPosition.y
 		) {
-			let passedPosition: Position = {
-				x: initialPosition.x - i,
-				y: initialPosition.y + i,
-			};
-			if (samePosition(passedPosition, desiredPosition)) {
+			let passedPosition = new Position(
+				initialPosition.x - i,
+				initialPosition.y + i
+			);
+			if (passedPosition.samePosition(desiredPosition)) {
 				if (tileIsEmptyOrOccupiedByOpponent(passedPosition, boardState, team)) {
 					return true;
 				}
@@ -99,10 +100,10 @@ export const getPossibleBishopMoves = (
 	const possibleMoves: Position[] = [];
 
 	for (let i = 1; i < 8; i++) {
-		const destination: Position = {
-			x: bishop.position.x + i,
-			y: bishop.position.y + i,
-		};
+		const destination = new Position(
+			bishop.position.x + i,
+			bishop.position.y + i
+		);
 
 		if (!tileIsOccupied(destination, boardState)) {
 			possibleMoves.push(destination);
@@ -115,10 +116,10 @@ export const getPossibleBishopMoves = (
 	}
 
 	for (let i = 1; i < 8; i++) {
-		const destination: Position = {
-			x: bishop.position.x - i,
-			y: bishop.position.y + i,
-		};
+		const destination = new Position(
+			bishop.position.x - i,
+			bishop.position.y + i
+		);
 
 		if (!tileIsOccupied(destination, boardState)) {
 			possibleMoves.push(destination);
@@ -130,10 +131,10 @@ export const getPossibleBishopMoves = (
 		}
 	}
 	for (let i = 1; i < 8; i++) {
-		const destination: Position = {
-			x: bishop.position.x + i,
-			y: bishop.position.y - i,
-		};
+		const destination = new Position(
+			bishop.position.x + i,
+			bishop.position.y - i
+		);
 
 		if (!tileIsOccupied(destination, boardState)) {
 			possibleMoves.push(destination);
@@ -146,10 +147,10 @@ export const getPossibleBishopMoves = (
 	}
 
 	for (let i = 1; i < 8; i++) {
-		const destination: Position = {
-			x: bishop.position.x - i,
-			y: bishop.position.y - i,
-		};
+		const destination = new Position(
+			bishop.position.x - i,
+			bishop.position.y - i
+		);
 
 		if (!tileIsOccupied(destination, boardState)) {
 			possibleMoves.push(destination);

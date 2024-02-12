@@ -1,7 +1,7 @@
 import './Tile.css';
 
 interface Props {
-	image: string;
+	image?: string;
 	number: number;
 	highlight: boolean;
 }

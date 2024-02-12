@@ -1,9 +1,10 @@
-import { Piece, Position, TeamType, samePosition } from '../../Constants';
 import {
 	tileIsEmptyOrOccupiedByOpponent,
 	tileIsOccupied,
 	tileIsOccupiedByOpponent,
 } from './GeneralRules';
+import { Piece, Position } from '../../models';
+import { TeamType } from '../../Types';
 
 export const kingMove = (
 	initialPosition: Position,
@@ -24,11 +25,11 @@ export const kingMove = (
 			? 1
 			: 0;
 
-	let passedPosition: Position = {
-		x: initialPosition.x + 1 * multipierX,
-		y: initialPosition.y + 1 * multipierY,
-	};
-	if (samePosition(passedPosition, desiredPosition)) {
+	let passedPosition = new Position(
+		initialPosition.x + 1 * multipierX,
+		initialPosition.y + 1 * multipierY
+	);
+	if (passedPosition.samePosition(desiredPosition)) {
 		if (tileIsEmptyOrOccupiedByOpponent(passedPosition, boardState, team)) {
 			return true;
 		}
@@ -47,10 +48,7 @@ export const getPossibleKingMoves = (
 	const possibleMoves: Position[] = [];
 
 	for (let i = 1; i < 2; i++) {
-		const destination: Position = {
-			x: king.position.x + i,
-			y: king.position.y + i,
-		};
+		const destination = new Position(king.position.x + i, king.position.y + i);
 
 		if (!tileIsOccupied(destination, boardState)) {
 			possibleMoves.push(destination);
@@ -63,10 +61,7 @@ export const getPossibleKingMoves = (
 	}
 
 	for (let i = 1; i < 2; i++) {
-		const destination: Position = {
-			x: king.position.x - i,
-			y: king.position.y + i,
-		};
+		const destination = new Position(king.position.x - i, king.position.y + i);
 
 		if (!tileIsOccupied(destination, boardState)) {
 			possibleMoves.push(destination);
@@ -78,26 +73,7 @@ export const getPossibleKingMoves = (
 		}
 	}
 	for (let i = 1; i < 2; i++) {
-		const destination: Position = {
-			x: king.position.x + i,
-			y: king.position.y - i,
-		};
-
-		if (!tileIsOccupied(destination, boardState)) {
-			possibleMoves.push(destination);
-		} else if (tileIsOccupiedByOpponent(destination, boardState, king.team)) {
-			possibleMoves.push(destination);
-			break;
-		} else {
-			break;
-		}
-	}
-
-	for (let i = 1; i < 2; i++) {
-		const destination: Position = {
-			x: king.position.x - i,
-			y: king.position.y - i,
-		};
+		const destination = new Position(king.position.x + i, king.position.y - i);
 
 		if (!tileIsOccupied(destination, boardState)) {
 			possibleMoves.push(destination);
@@ -110,10 +86,7 @@ export const getPossibleKingMoves = (
 	}
 
 	for (let i = 1; i < 2; i++) {
-		const destination: Position = {
-			x: king.position.x,
-			y: king.position.y - i,
-		};
+		const destination = new Position(king.position.x - i, king.position.y - i);
 
 		if (!tileIsOccupied(destination, boardState)) {
 			possibleMoves.push(destination);
@@ -126,10 +99,7 @@ export const getPossibleKingMoves = (
 	}
 
 	for (let i = 1; i < 2; i++) {
-		const destination: Position = {
-			x: king.position.x,
-			y: king.position.y + i,
-		};
+		const destination = new Position(king.position.x, king.position.y - i);
 
 		if (!tileIsOccupied(destination, boardState)) {
 			possibleMoves.push(destination);
@@ -142,10 +112,7 @@ export const getPossibleKingMoves = (
 	}
 
 	for (let i = 1; i < 2; i++) {
-		const destination: Position = {
-			x: king.position.x + i,
-			y: king.position.y,
-		};
+		const destination = new Position(king.position.x, king.position.y + i);
 
 		if (!tileIsOccupied(destination, boardState)) {
 			possibleMoves.push(destination);
@@ -158,10 +125,20 @@ export const getPossibleKingMoves = (
 	}
 
 	for (let i = 1; i < 2; i++) {
-		const destination: Position = {
-			x: king.position.x - i,
-			y: king.position.y,
-		};
+		const destination = new Position(king.position.x + i, king.position.y);
+
+		if (!tileIsOccupied(destination, boardState)) {
+			possibleMoves.push(destination);
+		} else if (tileIsOccupiedByOpponent(destination, boardState, king.team)) {
+			possibleMoves.push(destination);
+			break;
+		} else {
+			break;
+		}
+	}
+
+	for (let i = 1; i < 2; i++) {
+		const destination = new Position(king.position.x - i, king.position.y);
 
 		if (!tileIsOccupied(destination, boardState)) {
 			possibleMoves.push(destination);
