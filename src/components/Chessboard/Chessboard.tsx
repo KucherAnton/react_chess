@@ -79,11 +79,11 @@ const Chessboard = ({ playMove, pieces }: Props) => {
 
 			const currentPiece = pieces.find((p) => p.samePosition(grabPosition));
 
-			if (currentPiece === undefined) {
-				activePiece.style.position = 'relative';
-				activePiece.style.removeProperty('top');
-				activePiece.style.removeProperty('left');
-			}
+			// if (currentPiece === undefined) {
+			// 	activePiece.style.position = 'relative';
+			// 	activePiece.style.removeProperty('top');
+			// 	activePiece.style.removeProperty('left');
+			// }
 
 			if (currentPiece) {
 				let success = playMove(currentPiece.clone(), new Position(x, y));
@@ -154,5 +154,7 @@ export default Chessboard;
 
 // Collision with the board
 // Promotion error
-// Turns
 // Refactoring
+// Fixing async move
+// add check
+// add stalemate
