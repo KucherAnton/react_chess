@@ -76,14 +76,11 @@ const Chessboard = ({ playMove, pieces }: Props) => {
 			const y = Math.abs(
 				Math.ceil((e.clientY - chessboard.offsetTop - 640) / GRID_SIZE)
 			);
-
 			const currentPiece = pieces.find((p) => p.samePosition(grabPosition));
 
-			// if (currentPiece === undefined) {
-			// 	activePiece.style.position = 'relative';
-			// 	activePiece.style.removeProperty('top');
-			// 	activePiece.style.removeProperty('left');
-			// }
+			activePiece.style.position = 'relative';
+			activePiece.style.removeProperty('top');
+			activePiece.style.removeProperty('left');
 
 			if (currentPiece) {
 				let success = playMove(currentPiece.clone(), new Position(x, y));
@@ -108,7 +105,7 @@ const Chessboard = ({ playMove, pieces }: Props) => {
 			let image = piece ? piece.image : '';
 
 			let currentPiece =
-				activePiece != null
+				activePiece !== null
 					? pieces.find((p) => {
 							return p.samePosition(grabPosition);
 					  })

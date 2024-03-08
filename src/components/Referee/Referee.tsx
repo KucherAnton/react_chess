@@ -100,7 +100,7 @@ export const Referee = () => {
 			return;
 		}
 
-		setBoard((previousBoard) => {
+		setBoard(() => {
 			const clonedBoard = board.clone();
 			clonedBoard.pieces = clonedBoard.pieces.reduce((results, piece) => {
 				if (piece.samePiecePosition(promotionPawn)) {
